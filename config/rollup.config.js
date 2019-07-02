@@ -1,33 +1,42 @@
-import babel from 'rollup-plugin-babel';
-import { eslint } from 'rollup-plugin-eslint';
+import commonjs from 'rollup-plugin-commonjs';
+import path from 'path';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript';
+import buble from 'rollup-plugin-buble';
 import { uglify } from 'rollup-plugin-uglify';
 
 const isProd = process.env.NODE_ENV === 'production';
 
+const resolve = function(filePath) {
+  return path.join(__dirname, '..', filePath)
+}
+
 // 通用的插件
 const basePlugins = [
-  babel({
-    exclude: 'node_modules/**',
+  nodeResolve({
+    mainFields: ['jsnext', 'module', 'main']
   }),
-  eslint({
-    throwOnError: true,
-    throwOnWarning: true,
-    include: ['src/**'],
-    exclude: ['node_modules/**']
-  })
+  commonjs({
+    include: 'node_modules/**',
+  }),
+  typescript({
+    exclude: 'node_modules/**',
+    typescript: require('typescript'),
+  }),
+  buble()
 ];
 // 开发环境需要使用的插件
 const devPlugins = [];
 // 生产环境需要使用的插件
 const prodPlugins = [uglify()];
-
 const plugins = [...basePlugins].concat(isProd ? prodPlugins : devPlugins);
-const destFilePath = isProd ? './dist/dist.min.js' : './dist/dist.js';
 
 export default {
-  entry: 'index.js',
-  format: 'cjs',
-  dest: destFilePath,
-  sourceMap: isProd,
-  plugins,
+  input: resolve('index.ts'),
+  output: [{
+    file: resolve('dist/index.umd.js'),
+    format: 'umd',
+    name: 'simpleLib'
+  }],
+  plugins
 };

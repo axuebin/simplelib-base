@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "target": "es5",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": false,
+    "inlineSourceMap": false,
+    "outDir": "./dist",
+    "lib": [
+      "es2017",
+      "es2015",
+      "es2015.promise",
+      "dom"
+    ],
+    "downlevelIteration": true,
+    "declaration": true,
+    "moduleResolution": "node"
+  },
+  // 入口文件
+  "include": [
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "config",
+  ]
+}
